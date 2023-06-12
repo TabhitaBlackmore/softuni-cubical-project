@@ -1,2 +1,2 @@
-# softuni-cubical-project
+# softuni-cubicle-project
 SoftUni Workshop
