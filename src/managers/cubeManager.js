@@ -1,24 +1,9 @@
-const uniqid = require('uniqid');
-const cubes = [
-    {
-        id: '10w3gpg5bd0lior9ck2',
-        name: 'Mirror Cube',
-        description: "A cool mirror cube",
-        imageUrl: 'https://cdn.shopify.com/s/files/1/0270/0342/0758/files/1202977061844295.QAOySrnyE0B5cIfqTxz5_height640_480x480.png?v=1663142818',
-        difficultyLevel: 4
-    },
-    {
-        id: '10w3gpg5bd0lior9ck6',
-        name: 'Magic Cube',
-        description: "A cool Rubik Cube variation",
-        imageUrl: 'https://qph.cf2.quoracdn.net/main-qimg-b587408e05f2f33526f9834a17a26a31.webp',
-        difficultyLevel: 3
-    }
-];
+const Cube = require('../models/Cube');
 
-exports.getAll = (search, from, to) => {
-    let result = cubes.slice()
+exports.getAll = async (search, from, to) => {
+    let result = await Cube.find().lean();
 
+    // TODO: use mongoose to filter in db
     if(search) {
         result = result.filter(cube => cube.name.toLowerCase().includes(search.toLowerCase()))
     }
@@ -34,15 +19,12 @@ exports.getAll = (search, from, to) => {
     return result;
 }
 
-exports.getOne = (cubeId) => cubes.find(x => x.id == cubeId);
+exports.getOne = (cubeId) => Cube.findById(cubeId);
 
-exports.create = (cubeData) => {
-    const newCube = {
-        id: uniqid(),
-        ...cubeData,
-    }
+exports.create = async (cubeData) => {
+    const cube = new Cube(cubeData);
 
-    cubes.push(newCube);
+    await cube.save();
 
-    return newCube;
+    return cube;
 }
